@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/info', function () {
+    phpinfo();
+});
+Route::get('Weixin/valid','Weixin\WeixinController@valid');
+Route::any('Weixin/valid','Weixin\WeixinController@event');
+Route::get('/redis/token','Weixin\WeixinController@token');
