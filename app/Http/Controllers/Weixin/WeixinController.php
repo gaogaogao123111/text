@@ -19,7 +19,6 @@ class WeixinController extends Controller
     //接收微信推送 post
     public function event(){
         $content = file_get_contents("php://input");
-        var_dump($content);die;
         $time = date('Y-m-d H:i:s');
         $str = $time.$content."\n";
         is_dir('logs') or mkdir('logs',0777,true);
@@ -77,8 +76,6 @@ class WeixinController extends Controller
         }
         return $token;
     }
-
-
     //获取微信用户信息
     public function getuser($openid){
         $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$this->token()."&openid=".$openid."&lang=zh_CN";
@@ -86,7 +83,7 @@ class WeixinController extends Controller
         $aa = json_decode($data,true);
         return  $aa;
     }
-
+    //创建菜单
     public function createmenu()
     {
         // url
