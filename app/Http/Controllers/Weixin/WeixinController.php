@@ -52,8 +52,22 @@ class WeixinController extends Controller
                 $id = Weixin::insertGetId($aa_info);
                 echo '<xml><ToUserName><![CDATA['.$openid.']]></ToUserName><FromUserName><![CDATA['.$wxid.']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['. '欢迎关注 '. $aa_info['nickname'] .']]></Content></xml>';
             }
-        }else{
+        }else if($data->MsType){
+            $aa = $this->getuser($openid);
+            echo '<pre>';print_r($aa);echo '</pre>';
 
+            //用户信息入户
+            $aa_info = [
+                'openid' => $aa['openid'],
+                'nickname' => $aa['nickname'],
+                'sex' => $aa['sex'],
+                'headimgurl' => $aa['headimgurl'],
+                'subscribe_time' => $aa['subscribe_time'],
+                'mstype' => $aa['MsType'],
+
+            ];
+            $id = Weixin::insertGetId($aa_info);
+            echo '<xml><ToUserName><![CDATA['.$openid.']]></ToUserName><FromUserName><![CDATA['.$wxid.']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['. '去你大爷 '. $aa_info['nickname'] .']]></Content></xml>';
         }
 
 

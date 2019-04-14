@@ -77,3 +77,12 @@
 
 2019-04-14 23:43:00
 
+2019-04-14 23:58:21
+<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5gCESkUlYFnUEZHgDoOCpX4]]></FromUserName>
+<CreateTime>1555257481</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[subscribe]]></Event>
+<EventKey><![CDATA[]]></EventKey>
+</xml>
+
