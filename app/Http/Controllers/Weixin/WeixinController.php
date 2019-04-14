@@ -36,7 +36,7 @@ class WeixinController extends Controller
                 //用户关注过
                 echo '<xml><ToUserName><![CDATA['.$openid.']]></ToUserName><FromUserName><![CDATA['.$wxid.']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['. '欢迎回来 '. $localuser['nickname'] .']]></Content></xml>';
             }else{
-                //用户关注
+                //用户关注aa
                 //获取用户信息
                 $aa = $this->getuser($openid);
                 echo '<pre>';print_r($aa);echo '</pre>';
