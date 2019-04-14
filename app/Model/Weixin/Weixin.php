@@ -8,5 +8,4 @@ class Weixin extends Model
 {
     protected $table = 'wx_user';
     public $timestamps = false;
-    public $primaryKey = 'id';
 }

@@ -19,6 +19,7 @@ class WeixinController extends Controller
     //接收微信推送 post
     public function event(){
         $content = file_get_contents("php://input");
+        var_dump($content);die;
         $time = date('Y-m-d H:i:s');
         $str = $time.$content."\n";
         is_dir('logs') or mkdir('logs',0777,true);
@@ -27,7 +28,6 @@ class WeixinController extends Controller
         $openid = $data->FromUserName;
         $wxid = $data->ToUserName;
         $event = $data->Event;
-        $type = $data->MyType;
 
         //扫码关注
         if($event=='subscribe'){
