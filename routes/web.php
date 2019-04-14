@@ -14,9 +14,18 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
 Route::get('/info', function () {
     phpinfo();
 });
+
+Route::get('/redis/atoken','Weixin\WeixinController@atoken');
+
 Route::get('Weixin/valid','Weixin\WeixinController@valid');
 Route::any('Weixin/valid','Weixin\WeixinController@event');
-Route::get('/redis/token','Weixin\WeixinController@token');
+Route::get('Weixin/token','Weixin\WeixinController@token');
+Route::get('Weixin/createmenu','Weixin\WeixinController@createmenu');     //创建菜单
+
+
