@@ -120,14 +120,14 @@ class WeixinController extends Controller
                         <CreateTime>' . time() . '</CreateTime> 
                         <MsgType><![CDATA[text]]></MsgType> 
                         <Content><![CDATA[' . $res . ']]></Content>                                                            
-                        <MsgId>22267763196981818</MsgId> ';
+                        <MsgId>22267763196981818</MsgId></xml>';
             }else{
                 $xml = '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserN
                           <FromUserName><![CDATA[' . $wxid . ']]></FromUserName
                         <CreateTime>' . time() . '</CreateTime>              
                          <MsgType><![CDATA[text]]></MsgType>              
                            <Content><![CDATA[城市名称不对]]></Content>          
-                           <MsgId>22267763196981818</MsgId> ';
+                           <MsgId>22267763196981818</MsgId></xml> ';
             }
             echo $xml;
         }
