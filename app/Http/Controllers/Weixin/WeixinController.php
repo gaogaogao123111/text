@@ -6,41 +6,42 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
 use App\Model\Weixin\Weixin;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 class WeixinController extends Controller
 {
 
-    public function atoken(){
-        echo $this->token();
-    }
     //处理首次接入GET请求
     public function valid(){
         echo $_GET['echostr'];
     }
     //接收微信推送 post
-    public function event(){
+    public function event()
+    {
         $content = file_get_contents("php://input");
         $time = date('Y-m-d H:i:s');
-        $str = $time.$content."\n";
-        is_dir('logs') or mkdir('logs',0777,true);
-        file_put_contents("logs/wx_event.log",$str,FILE_APPEND);
+        $str = $time . $content . "\n";
+        is_dir('logs') or mkdir('logs', 0777, true);
+        file_put_contents("logs/wx_event.log", $str, FILE_APPEND);
         $data = simplexml_load_string($content);
-        $openid = $data->FromUserName;
-        $wxid = $data->ToUserName;
+        $openid = $data->FromUserName;   //用户openid
+        $wxid = $data->ToUserName;    //公总号id
         $event = $data->Event;
+        $msgtype = $data->MsgType;      //消息类型
 
         //扫码关注
-        if($event=='subscribe'){
+        if ($event == 'subscribe') {
             //根据openid判断用户是否已存在
-            $localuser = Weixin::where(['openid'=>$openid])->first();
-            if($localuser){
+            $localuser = Weixin::where(['openid' => $openid])->first();
+            if ($localuser) {
                 //用户关注过
-                echo '<xml><ToUserName><![CDATA['.$openid.']]></ToUserName><FromUserName><![CDATA['.$wxid.']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['. '欢迎回来 '. $localuser['nickname'] .']]></Content></xml>';
-            }else{
+                echo '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName><FromUserName><![CDATA[' . $wxid . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . '欢迎回来 ' . $localuser['nickname'] . ']]></Content></xml>';
+            } else {
                 //用户关注aa
                 //获取用户信息
                 $aa = $this->getuser($openid);
-                echo '<pre>';print_r($aa);echo '</pre>';
-
+                echo '<pre>';
+                print_r($aa);
+                echo '</pre>';
                 //用户信息入户
                 $aa_info = [
                     'openid' => $aa['openid'],
@@ -49,31 +50,91 @@ class WeixinController extends Controller
                     'headimgurl' => $aa['headimgurl'],
                     'subscribe_time' => $aa['subscribe_time'],
                 ];
-                $id = Weixin::insertGetId($aa_info);
-                echo '<xml><ToUserName><![CDATA['.$openid.']]></ToUserName><FromUserName><![CDATA['.$wxid.']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['. '欢迎关注 '. $aa_info['nickname'] .']]></Content></xml>';
+                Weixin::insertGetId($aa_info);
+                echo '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName><FromUserName><![CDATA[' . $wxid . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . '欢迎关注 ' . $aa_info['nickname'] . ']]></Content></xml>';
             }
-        }else if($data->MsType){
-            $aa = $this->getuser($openid);
-            echo '<pre>';print_r($aa);echo '</pre>';
+        } else if ($msgtype == 'voice') {      //保存语音文件
+            $media_id = $data->MediaId;
+            $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token=' . $this->token() . '&media_id=' . $media_id;
+            $arm = file_get_contents($url);
+            $file_name = time() . mt_rand(1111, 9999) . '.amr';
+            $arr = file_put_contents('wx/voice/' . $file_name, $arm);
+            if ($arr) {
+                $data = [
+                    'openid' => $openid,
+                    'voice' => $file_name,
+                    'subscribe_time' => time()
+                ];
+                Weixin::insertGetId($data);
+                if (!$data) {
+                    Storage::delete('wx/img/' . $file_name);
+                    echo "失败";
+                } else {
+                    echo "成功";
+                }
+            }
+        } else if ($msgtype == 'image') {
+            $media_id = $data->MediaId;
+            //url
+            $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token=' . $this->token() . '&media_id=' . $media_id;
+            $client = new Client();
+            $img = $client->get($url);
 
-            //用户信息入户
-            $aa_info = [
-                'openid' => $aa['openid'],
-                'nickname' => $aa['nickname'],
-                'sex' => $aa['sex'],
-                'headimgurl' => $aa['headimgurl'],
-                'subscribe_time' => $aa['subscribe_time'],
-                'mstype' => $aa['MsType'],
 
-            ];
-            $id = Weixin::insertGetId($aa_info);
-            echo '<xml><ToUserName><![CDATA['.$openid.']]></ToUserName><FromUserName><![CDATA['.$wxid.']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['. '去你大爷 '. $aa_info['nickname'] .']]></Content></xml>';
+            $headers = $img->getHeaders();//获取响应头信息
+            $file_name = $headers['Content-disposition'][0];//获取文件名
+            $file_info = rtrim(substr($file_name, -20), '"');//去除 截取
+            $a_file_name = substr(md5(time() . mt_rand(1111, 9999)), 5, 8) . '_' . $file_info;//截取加密后的文件名
+            $arr = Storage::put('wx/image/' . $a_file_name, $img->getBody());//保存文件
+            if ($arr == '1') {
+                $data = [
+                    'img' => $a_file_name,
+                    'openid' => $openid,
+                    'subscribe_time' => time(),
+                ];
+                Weixin::insertGetId($data);
+                if (!$data) {
+                    Storage::delete('wx/image/' . $file_name);
+                    echo "失败";
+                } else {
+                    echo "成功";
+                }
+
+            }
+        } else if ($msgtype == 'text') {
+            //自动回复天气
+            if (strpos($data->Content, '＋天气')) {
+                //获取城市名
+                $city = explode('＋', $data->Content)[0];
+                $url = 'https://free-api.heweather.net/s6/weather/now?key=HE1904161045001471&location=' . $city;
+                $arr = json_decode(file_get_contents($url), true);
+//                echo '<pre>';print_r($arr);echo '</pre>';
+                $sheshidu = $arr['HeWeather6'][0]['now']['tmp'];                       //摄氏度
+                $fengxiang = $arr['HeWeather6'][0]['now']['wind_dir'];       //风向
+                $fengli = $arr['HeWeather6'][0]['now']['wind_sc'];             //风力
+                $shidu = $arr['HeWeather6'][0]['now']['hum'];                     //湿度
+                $res = "摄氏度：".$sheshidu."风向：".$fengxiang."风力：".$fengli."湿度：".$shidu;
+
+                $xml = '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+                        <FromUserName><![CDATA[' . $wxid . ']]></FromUserName>
+                        <CreateTime>' . time() . '</CreateTime> 
+                        <MsgType><![CDATA[text]]></MsgType> 
+                        <Content><![CDATA[' . $res . ']]></Content>                                                            
+                        <MsgId>22267763196981818</MsgId> ';
+            }else{
+                $xml = '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserN
+                          <FromUserName><![CDATA[' . $wxid . ']]></FromUserName
+                        <CreateTime>' . time() . '</CreateTime>              
+                         <MsgType><![CDATA[text]]></MsgType>              
+                           <Content><![CDATA[城市名称不对]]></Content>          
+                           <MsgId>22267763196981818</MsgId> ';
+            }
+            echo $xml;
         }
-
-
-
     }
-    //获取token
+
+
+    //获取token           </xml>
     public function token(){
         $key = 'wx_access_token';
         $token = Redis::get($key);
