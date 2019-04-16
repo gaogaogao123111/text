@@ -105,7 +105,6 @@ class WeixinController extends Controller
             //自动回复天气
             if (strpos($data->Content, '＋天气')) {
                 //获取城市名
-                $time = $data->CreateTime;
                 $city = explode('＋', $data->Content)[0];
                 $url = 'https://free-api.heweather.net/s6/weather/now?key=HE1904161045001471&location=' . $city;
                 $arr = json_decode(file_get_contents($url), true);
@@ -116,23 +115,23 @@ class WeixinController extends Controller
                 $shidu = $arr['HeWeather6'][0]['now']['hum'];                     //湿度
                 $res = "摄氏度：".$sheshidu."风向：".$fengxiang."风力：".$fengli."湿度：".$shidu;
 
-                $xml = "<xml>
-                         <ToUserName><![CDATA['.$openid.']]></ToUserName>
-                         <FromUserName><![CDATA['.$wxid.']]></FromUserName>
-                         <CreateTime>$time</CreateTime>
-                         <MsgType><![CDATA[text]]></MsgType>                                             
-                         <Content><![CDATA['.$res.']]></Content> 
-                         </xml>";
+                $xml='<xml>
+                                <ToUserName><![CDATA['.$openid.']]></ToUserName>
+                                <FromUserName><![CDATA['.$wxid.']]></FromUserName>
+                                <CreateTime>.time().</CreateTime>
+                                <MsgType><![CDATA[text]]></MsgType>                      
+                                <Content><![CDATA['.$res.']]></Content>
+                                </xml>';
                 echo $xml;
             }else{
-               $xml = "<xml>                                              
-                        <ToUserName><![CDATA['.$openid.']]></ToUserName>  
-                        <FromUserName><![CDATA['.$wxid.']]></FromUserName>
-                        <CreateTime>$time</CreateTime>               
-                        <MsgType><![CDATA[text]]></MsgType>               
-                        <Content><![CDATA['.'城市不对'.']]></Content>                  
-                        </xml>";
-               echo $xml;
+               echo "<xml>
+                     <ToUserName><![CDATA['.$openid.']]></ToUserName>
+                     <FromUserName><![CDATA['.$wxid.']]></FromUserName>
+                     <CreateTime>.time().</CreateTime>
+                     <MsgType><![CDATA[text]]></MsgType>
+                     <Content><![CDATA[城市信息有误]]></Content>    
+                     </xml>";
+
             }
         }
     }
