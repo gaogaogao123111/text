@@ -27,6 +27,8 @@ class WeixinController extends Controller
         $wxid = $data->ToUserName;    //公总号id
         $event = $data->Event;
         $msgtype = $data->MsgType;      //消息类型
+        $client = new Client();
+
 
         //扫码关注
         if ($event == 'subscribe') {
@@ -53,57 +55,48 @@ class WeixinController extends Controller
                 Weixin::insertGetId($aa_info);
                 echo '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName><FromUserName><![CDATA[' . $wxid . ']]></FromUserName><CreateTime>' . time() . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . '欢迎关注 ' . $aa_info['nickname'] . ']]></Content></xml>';
             }
-        } else if ($msgtype == 'voice') {      //保存语音文件
+        }else if($msgtype == 'voice') {      //保存语音文件
             $media_id = $data->MediaId;
             $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token=' . $this->token() . '&media_id=' . $media_id;
             $arm = file_get_contents($url);
             $file_name = time() . mt_rand(1111, 9999) . '.amr';
-            $arr = file_put_contents('wx/voice/' . $file_name, $arm);
-            if ($arr) {
-                $data = [
-                    'openid' => $openid,
-                    'voice' => $file_name,
-                    'subscribe_time' => time()
-                ];
-                Weixin::insertGetId($data);
-                if (!$data) {
-                    Storage::delete('wx/img/' . $file_name);
-                    echo "失败";
-                } else {
-                    echo "成功";
-                }
+            $arr = file_put_contents('wx/voice/'.$file_name, $arm);
+            $data = [
+                'openid' => $openid,
+                'voice' => 'wx/voice/'.$file_name,
+                'subscribe_time' => time()
+            ];
+            $id = Weixin::insertGetId($data);
+            if (!$id) {
+                echo "失败";
+            } else {
+                echo "成功";
             }
-        } else if ($msgtype == 'image') {
+        }else if($msgtype == 'image'){
             $media_id = $data->MediaId;
             //url
             $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token=' . $this->token() . '&media_id=' . $media_id;
-            $client = new Client();
             $img = $client->get($url);
-
-
             $headers = $img->getHeaders();//获取响应头信息
             $file_name = $headers['Content-disposition'][0];//获取文件名
             $file_info = rtrim(substr($file_name, -20), '"');//去除 截取
-            $a_file_name = substr(md5(time() . mt_rand(1111, 9999)), 5, 8) . '_' . $file_info;//截取加密后的文件名
-            $arr = Storage::put('wx/image/' . $a_file_name, $img->getBody());//保存文件
-            if ($arr == '1') {
-                $data = [
-                    'img' => $a_file_name,
-                    'openid' => $openid,
-                    'subscribe_time' => time(),
-                ];
-                Weixin::insertGetId($data);
-                if (!$data) {
-                    Storage::delete('wx/image/' . $file_name);
-                    echo "失败";
-                } else {
-                    echo "成功";
-                }
-
+            $a_file_name = 'wx/img/'.substr(md5(time() . mt_rand(1111, 9999)), 5, 8) . '_' . $file_info;//截取加密后的文件名
+            Storage::put($a_file_name, $img->getBody());//保存文件
+            $data = [
+                'img' => $a_file_name,
+                'openid' => $openid,
+                'subscribe_time' => time(),
+            ];
+            $id = Weixin::insertGetId($data);
+            if (!$id) {
+                Storage::delete('wx/image/' . $a_file_name);
+                echo "失败";
+            } else {
+                echo "成功";
             }
-        } else if ($msgtype == 'text') {
+        }else if($msgtype == 'text') {
             //自动回复天气
-            if (strpos($data->Content, '＋天气')) {
+            if (strpos($data->Content,'＋天气')) {
                 //获取城市名
                 $city = explode('＋', $data->Content)[0];
                 $url = 'https://free-api.heweather.net/s6/weather/now?key=HE1904161045001471&location=' . $city;
@@ -114,15 +107,25 @@ class WeixinController extends Controller
                 $fengli = $arr['HeWeather6'][0]['now']['wind_sc'];             //风力
                 $shidu = $arr['HeWeather6'][0]['now']['hum'];                     //湿度
                 $res = "摄氏度：".$sheshidu."风向：".$fengxiang."风力：".$fengli."湿度：".$shidu;
-
                 $xml='<xml>
-                                <ToUserName><![CDATA['.$openid.']]></ToUserName>
-                                <FromUserName><![CDATA['.$wxid.']]></FromUserName>
-                                <CreateTime>.time().</CreateTime>
-                                <MsgType><![CDATA[text]]></MsgType>                      
-                                <Content><![CDATA['.$res.']]></Content>
-                                </xml>';
+                      <ToUserName><![CDATA['.$openid.']]></ToUserName>
+                      <FromUserName><![CDATA['.$wxid.']]></FromUserName>
+                      <CreateTime>.time().</CreateTime>
+                      <MsgType><![CDATA[text]]></MsgType>                      
+                      <Content><![CDATA['.$res.']]></Content>
+                      </xml>';
                 echo $xml;
+                $data = [
+                    'openid' => $openid,
+                    'text' => $res,
+                    'subscribe_time' =>time()
+                ];
+                $id = Weixin::insertGetId($data);
+                if($id){
+                    echo "成功";
+                }else{
+                    echo "失败";
+                }
             }else{
                echo "<xml>
                      <ToUserName><![CDATA['.$openid.']]></ToUserName>
@@ -131,13 +134,12 @@ class WeixinController extends Controller
                      <MsgType><![CDATA[text]]></MsgType>
                      <Content><![CDATA[城市信息有误]]></Content>    
                      </xml>";
-
             }
         }
     }
 
 
-    //获取token           </xml>
+    //获取token
     public function token(){
         $key = 'wx_access_token';
         $token = Redis::get($key);
@@ -198,4 +200,10 @@ class WeixinController extends Controller
         }
     }
 
+
+
+
+    public function sendmsg(){
+
+    }
 }
