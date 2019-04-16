@@ -115,19 +115,19 @@ class WeixinController extends Controller
                 $shidu = $arr['HeWeather6'][0]['now']['hum'];                     //湿度
                 $res = "摄氏度：".$sheshidu."风向：".$fengxiang."风力：".$fengli."湿度：".$shidu;
 
-                $xml = '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+                $xml = "<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName>
                         <FromUserName><![CDATA[' . $wxid . ']]></FromUserName>
                         <CreateTime>' . time() . '</CreateTime> 
                         <MsgType><![CDATA[text]]></MsgType> 
                         <Content><![CDATA[' . $res . ']]></Content>                                                            
-                        <MsgId>22267763196981818</MsgId></xml>';
+                        <MsgId>22267763196981818</MsgId></xml>";
             }else{
-                $xml = '<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserN
-                          <FromUserName><![CDATA[' . $wxid . ']]></FromUserName
+                $xml = "<xml><ToUserName><![CDATA[' . $openid . ']]></ToUserName>
+                        <FromUserName><![CDATA[' . $wxid . ']]></FromUserName>
                         <CreateTime>' . time() . '</CreateTime>              
-                         <MsgType><![CDATA[text]]></MsgType>              
-                           <Content><![CDATA[城市名称不对]]></Content>          
-                           <MsgId>22267763196981818</MsgId></xml> ';
+                        <MsgType><![CDATA[text]]></MsgType>              
+                        <Content><![CDATA[城市名称不对]]></Content>          
+                        <MsgId>22267763196981818</MsgId></xml>";
             }
             echo $xml;
         }
