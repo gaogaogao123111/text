@@ -105,6 +105,7 @@ class WeixinController extends Controller
             //自动回复天气
             if (strpos($data->Content, '＋天气')) {
                 //获取城市名
+                $time = $data->CreateTime;
                 $city = explode('＋', $data->Content)[0];
                 $url = 'https://free-api.heweather.net/s6/weather/now?key=HE1904161045001471&location=' . $city;
                 $arr = json_decode(file_get_contents($url), true);
@@ -118,19 +119,19 @@ class WeixinController extends Controller
                 $xml = "<xml>
                          <ToUserName><![CDATA['.$openid.']]></ToUserName>
                          <FromUserName><![CDATA['.$wxid.']]></FromUserName>
-                         <CreateTime>'.time().'</CreateTime>
+                         <CreateTime>$time</CreateTime>
                          <MsgType><![CDATA[text]]></MsgType>                                             
                          <Content><![CDATA['.$res.']]></Content> 
-                         </xml> ";
+                         </xml>";
                 echo $xml;
             }else{
                $xml = "<xml>                                              
                         <ToUserName><![CDATA['.$openid.']]></ToUserName>  
                         <FromUserName><![CDATA['.$wxid.']]></FromUserName>
-                        <CreateTime>'.time().'</CreateTime>               
+                        <CreateTime>$time</CreateTime>               
                         <MsgType><![CDATA[text]]></MsgType>               
                         <Content><![CDATA['.'城市不对'.']]></Content>                  
-                        </xml> ";
+                        </xml>";
                echo $xml;
             }
         }
