@@ -27,5 +27,6 @@ Route::get('Weixin/valid','Weixin\WeixinController@valid');
 Route::any('Weixin/valid','Weixin\WeixinController@event');
 Route::get('Weixin/token','Weixin\WeixinController@token');
 Route::get('Weixin/createmenu','Weixin\WeixinController@createmenu');     //创建菜单
+Route::get('Weixin/send','Weixin\WeixinController@send');
 
 

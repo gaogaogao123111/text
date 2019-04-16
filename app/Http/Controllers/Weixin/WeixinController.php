@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
 use App\Model\Weixin\Weixin;
+use App\Model\Weixin\Qun;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 class WeixinController extends Controller
@@ -203,7 +204,33 @@ class WeixinController extends Controller
 
 
 
-    public function sendmsg(){
+    public function sendmsg($openid_arr,$content){
+        $msg = [
+           'touser'=>$openid_arr,
+           'msgtype'=>"text",
+            "text" =>[
+                "content" =>$content
+            ]
+        ];
+        $data = json_encode($msg,JSON_UNESCAPED_UNICODE);
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token='.$this->token();
+        $client = new Client();
+        $res = $client->request('post',$url,[
+            'body' => $data
+        ]);
+        return $res->getBody();
+    }
+    public function send(){
+        $userlist = Weixin::where(['sub_status'=>1])->get()->toArray();
+        $openid_arr = array_column($userlist,'openid');
+        $openid_arr = json_encode($openid_arr);
+        $msg = "是不是傻";
+        $res = $this->sendmsg($openid_arr,$msg);
+        if($res){
+            echo "发送成功";
+        }else{
+            echo "发送失败";
 
+        }
     }
 }
