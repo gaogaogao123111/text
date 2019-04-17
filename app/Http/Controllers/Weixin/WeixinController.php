@@ -223,7 +223,7 @@ class WeixinController extends Controller
     public function send(){
         $userlist = Weixin::where(['sub_status'=>1])->get()->toArray();
         $openid_arr = array_column($userlist,'openid');
-        $openid_arr = json_encode($openid_arr);
+        print_r($openid_arr);
         $msg = "是不是傻";
         $res = $this->sendmsg($openid_arr,$msg);
         if($res){
