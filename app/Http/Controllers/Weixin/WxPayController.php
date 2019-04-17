@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class WxPayController extends Controller
 {
     public $unifiedorder_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';//统一下单接口
-    public $notify_url = 'http://text.comcto.com/Weixin/notify'; //支付后回调
+    public $notify_url = 'http://1809gaoxiangdong.comcto.com/Weixin/notify'; //支付后回调
     public $values = [];
 
 
