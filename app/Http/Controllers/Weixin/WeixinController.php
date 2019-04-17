@@ -97,9 +97,9 @@ class WeixinController extends Controller
             }
         }else if($msgtype == 'text') {
             //自动回复天气
-            if (strpos($data->Content,'＋天气')) {
+            if (strpos($data->Content,'+天气')) {
                 //获取城市名
-                $city = explode('＋', $data->Content)[0];
+                $city = explode('+', $data->Content)[0];
                 $url = 'https://free-api.heweather.net/s6/weather/now?key=HE1904161045001471&location=' . $city;
                 $arr = json_decode(file_get_contents($url), true);
 //                echo '<pre>';print_r($arr);echo '</pre>';
