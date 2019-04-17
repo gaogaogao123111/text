@@ -34,19 +34,9 @@ class WxPayController extends Controller
         $this->SetSign();
         $xml = $this->Xml(); //将数组转化为xml
         $res = $this->postXmlCurl($xml,$this->unifiedorder_url,$usecert = false,$second = 30);
-        $data = simplexml_load_string($res);
-//      echo 'return_code: '.$data->return_code;echo '<br>';
-//		echo 'return_msg: '.$data->return_msg;echo '<br>';
-//		echo 'appid: '.$data->appid;echo '<br>';
-//		echo 'mch_id: '.$data->mch_id;echo '<br>';
-//		echo 'nonce_str: '.$data->nonce_str;echo '<br>';
-//		echo 'sign: '.$data->sign;echo '<br>';
-//		echo 'result_code: '.$data->result_code;echo '<br>';
-//		echo 'prepay_id: '.$data->prepay_id;echo '<br>';
-//		echo 'trade_type: '.$data->trade_type;echo '<br>';
-//      echo 'code_url: '.$data->code_url;echo '<br>';die;
+        $da = simplexml_load_string($res);
         $data = [
-          'code_url' => $data->code_url
+          'code_url' => $da->code_url
         ];
         return view('Weixin.wx',$data);
     }
@@ -135,7 +125,7 @@ class WxPayController extends Controller
     public function notify(){
         $data = file_get_contents("php://input");
         $log_str = date('Y-m-d H:i:s')."\n".$data."\n<<<<<<<";
-        file_put_contents('logs/pay_notice.log',$log_str,FILE_APPEND);
+        file_put_contents('logs/wx_pay_notice.log',$log_str,FILE_APPEND);
         $xml = simplexml_load_string($data);
         if($xml->result_code=='SUCCESS' && $xml->return_code=='SUCCESS'){      //微信支付成功回调
             //验证签名
