@@ -31,7 +31,7 @@ Route::get('Weixin/send','Weixin\WeixinController@send');//群发消息
 
 
 Route::get('Weixin/text','Weixin\WxPayController@text');
-Route::post('Weixin/notify','Weixin\WxPayController@notify');
+Route::get('Weixin/notify','Weixin\WxPayController@notify');
 
 
 

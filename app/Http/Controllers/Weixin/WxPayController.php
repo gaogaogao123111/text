@@ -124,7 +124,7 @@ class WxPayController extends Controller
     //支付回调
     public function notify(){
         $data = file_get_contents("php://input");
-        $log_str = date('Y-m-d H:i:s')."\n".$data."\n<<<<<<<";
+        $log_str = date('Y-m-d H:i:s') . "\n" . $data . "\n<<<<<<<";
         file_put_contents('logs/wx_pay_notice.log',$log_str,FILE_APPEND);
         $xml = simplexml_load_string($data);
         if($xml->result_code=='SUCCESS' && $xml->return_code=='SUCCESS'){      //微信支付成功回调
