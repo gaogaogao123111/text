@@ -17,7 +17,7 @@ class WxPayController extends Controller
 
     public function text(){
         $money = 1;   //支付的金额  以分为准
-        $order_id = time().'-gaoxiangdong-'.mt_rand(1111,9999);   //测试订单号  当前时间+随机数
+        $order_id = time().'_gaoxiangdong_'.mt_rand(1111,9999);   //测试订单号  当前时间+随机数
         $order_info = [
             'appid'         =>  env('WEIXIN_APPID_0'),      //微信支付绑定的服务号的APPID
             'mch_id'        =>  env('WEIXIN_MCH_ID'),       // 商户ID
@@ -33,7 +33,7 @@ class WxPayController extends Controller
         $this->values = $order_info;
         $this->SetSign();
         $xml = $this->Xml(); //将数组转化为xml
-        $res = $this->postXmlCurl($xml,$this->unifiedorder_url,$useCert = false,$second = 30);
+        $res = $this->postXmlCurl($xml, $this->unifiedorder_url, $useCert = false, $second = 30);
         $da = simplexml_load_string($res);
         $data = [
           'code_url' => $da->code_url
@@ -124,14 +124,15 @@ class WxPayController extends Controller
     //支付回调
     public function notify(){
         $data = file_get_contents("php://input");
+        //记录日志
         $log_str = date('Y-m-d H:i:s') . "\n" . $data . "\n<<<<<<<";
-        file_put_contents('logs/wx_pay_notice.log',$log_str,FILE_APPEND);
+        file_put_contents('logs/wx_notice.log',$log_str,FILE_APPEND);
         $xml = simplexml_load_string($data);
         if($xml->result_code=='SUCCESS' && $xml->return_code=='SUCCESS'){      //微信支付成功回调
             //验证签名
             $sign = true;
             if($sign){
-                echo "签名验证成功";
+                //签名验证成功
             }else{
                 echo '验签失败，IP: '.$_SERVER['REMOTE_ADDR'];
             }
