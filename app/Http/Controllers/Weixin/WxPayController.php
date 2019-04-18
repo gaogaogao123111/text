@@ -33,7 +33,7 @@ class WxPayController extends Controller
         $this->values = $order_info;
         $this->SetSign();
         $xml = $this->Xml(); //将数组转化为xml
-        $res = $this->postXmlCurl($xml,$this->unifiedorder_url,$usecert = false,$second = 30);
+        $res = $this->postXmlCurl($xml,$this->unifiedorder_url,$useCert = false,$second = 30);
         $da = simplexml_load_string($res);
         $data = [
           'code_url' => $da->code_url
