@@ -1,13 +1,13 @@
 /node_modules
 /public/hot
 /public/storage
+/public/logs
 /storage/*.key
 /vendor
 .env
-/public/wx
-/public/logs
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.idea
