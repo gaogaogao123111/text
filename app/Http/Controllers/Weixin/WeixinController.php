@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Weixin;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
 use App\Model\Weixin\Weixin;
@@ -29,8 +28,6 @@ class WeixinController extends Controller
         $event = $data->Event;
         $msgtype = $data->MsgType;      //消息类型
         $client = new Client();
-
-
         //扫码关注
         if ($event == 'subscribe') {
             //根据openid判断用户是否已存在

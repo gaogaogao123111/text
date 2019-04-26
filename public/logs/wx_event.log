@@ -2005,3 +2005,73 @@
 <EventKey><![CDATA[]]></EventKey>
 </xml>
 
+2019-04-19 13:30:07<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5oKEs_RJzVshTvXykHGE9DM]]></FromUserName>
+<CreateTime>1555426756</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[subscribe]]></Event>
+<EventKey><![CDATA[]]></EventKey>
+</xml>
+
+2019-04-25 23:14:07<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5gCESkUlYFnUEZHgDoOCpX4]]></FromUserName>
+<CreateTime>1555410500</CreateTime>
+<MsgType><![CDATA[image]]></MsgType>
+<PicUrl><![CDATA[http://mmbiz.qpic.cn/mmbiz_jpg/rS8cBXvtETkuSsn8q7UhWoqFoicdIE9tU8uia0MOBbDwQiarKreluje2y4RzKTpJaNO2ibicA5ibiahIXaajdEWdmSiaicQ/0]]></PicUrl>
+<MsgId>22268125003768450</MsgId>
+<MediaId><![CDATA[fH62mfs7-6hqjoPhjyx7b0A65vmLtxWYFKCtiFi3JnfGdEdXGiAazeigLfLJrEWH]]></MediaId>
+</xml>
+
+2019-04-25 23:15:40<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5gCESkUlYFnUEZHgDoOCpX4]]></FromUserName>
+<CreateTime>1555410500</CreateTime>
+<MsgType><![CDATA[image]]></MsgType>
+<PicUrl><![CDATA[http://mmbiz.qpic.cn/mmbiz_jpg/rS8cBXvtETkuSsn8q7UhWoqFoicdIE9tU8uia0MOBbDwQiarKreluje2y4RzKTpJaNO2ibicA5ibiahIXaajdEWdmSiaicQ/0]]></PicUrl>
+<MsgId>22268125003768450</MsgId>
+<MediaId><![CDATA[fH62mfs7-6hqjoPhjyx7b0A65vmLtxWYFKCtiFi3JnfGdEdXGiAazeigLfLJrEWH]]></MediaId>
+</xml>
+
+2019-04-25 23:17:17<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5oKEs_RJzVshTvXykHGE9DM]]></FromUserName>
+<CreateTime>1555382927</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[菏泽＋天气]]></Content>
+<MsgId>22267727972137527</MsgId>
+</xml>
+
+2019-04-25 23:17:37<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5oKEs_RJzVshTvXykHGE9DM]]></FromUserName>
+<CreateTime>1555382927</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[菏泽＋天气]]></Content>
+<MsgId>22267727972137527</MsgId>
+</xml>
+
+2019-04-25 23:17:50<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5oKEs_RJzVshTvXykHGE9DM]]></FromUserName>
+<CreateTime>1555382927</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[菏泽+天气]]></Content>
+<MsgId>22267727972137527</MsgId>
+</xml>
+
+2019-04-25 23:18:48<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5gCESkUlYFnUEZHgDoOCpX4]]></FromUserName>
+<CreateTime>1555322670</CreateTime>
+<MsgType><![CDATA[voice]]></MsgType>
+<MediaId><![CDATA[4rutwpNrne7eQoXxNP_YuCSOo54HFc0VtumTJi6FV3TfA5rba12yt2u1s5KYpBlC]]></MediaId>
+<Format><![CDATA[amr]]></Format>
+<MsgId>22266865311162013</MsgId>
+<Recognition><![CDATA[]]></Recognition>
+</xml>
+
+2019-04-26 11:15:48<xml><ToUserName><![CDATA[gh_d33e39ee95e0]]></ToUserName>
+<FromUserName><![CDATA[o_jKA5gCESkUlYFnUEZHgDoOCpX4]]></FromUserName>
+<CreateTime>1555322670</CreateTime>
+<MsgType><![CDATA[voice]]></MsgType>
+<MediaId><![CDATA[4rutwpNrne7eQoXxNP_YuCSOo54HFc0VtumTJi6FV3TfA5rba12yt2u1s5KYpBlC]]></MediaId>
+<Format><![CDATA[amr]]></Format>
+<MsgId>22266865311162013</MsgId>
+<Recognition><![CDATA[]]></Recognition>
+</xml>
+
